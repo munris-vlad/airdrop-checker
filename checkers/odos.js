@@ -1,8 +1,7 @@
 import {
     generateRandomUserAgent,
     getKeyByValue,
-    readWallets,
-    ensureDirectoryExistence
+    readWallets
 } from '../utils/common.js'
 import axios from "axios"
 import { Table } from 'console-table-printer'
@@ -23,7 +22,7 @@ let headers = [
     { id: 'airdrop', title: 'airdrop'},
 ]
 
-let debug = false
+let debug = true
 let p
 let csvWriter
 let wallets = readWallets('./addresses/evm.txt')
@@ -59,8 +58,8 @@ async function checkAirdrop(wallet, proxy = null) {
     stats[wallet].airdrop = 0
 
     while (!isFetched) {
-        await axios.get(`https://api.scrollpump.xyz/api/Airdrop/GetReward?address=${wallet}`, config).then(async response => {
-            stats[wallet].airdrop = parseInt(response.data.data.baseReward) + parseInt(response.data.data.bonusReward)
+        await axios.get(`https://api.odos.xyz/loyalty/users/${wallet}/balances`, config).then(async response => {
+            stats[wallet].airdrop = parseInt(response.data.data.pendingTokenBalance) / 1e18
             totalAirdrop += parseInt(stats[wallet].airdrop)
             isFetched = true
         }).catch(e => {
@@ -126,11 +125,8 @@ async function fetchWallets() {
         sort: (row1, row2) => +row1.n - +row2.n
     })
 
-    const csvFilePath = './results/scroll-pump.csv'
-    ensureDirectoryExistence(csvFilePath)
-
     csvWriter = createObjectCsvWriter({
-        path: csvFilePath,
+        path: './results/odos.csv',
         header: headers
     })
 
@@ -175,7 +171,7 @@ async function addTotalRow() {
     p.addRow(row, { color: "cyan" })
 }
 
-export async function scrollPumpAirdropChecker() {
+export async function odosAirdropChecker() {
     progressBar.start(iterations, 0)
     await fetchWallets()
     await addTotalRow()

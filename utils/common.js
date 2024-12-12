@@ -1,5 +1,4 @@
 import fs from "fs"
-import path from 'path'
 import axios from "axios"
 import inquirer from "inquirer"
 import { HttpsProxyAgent } from "https-proxy-agent"
@@ -30,13 +29,6 @@ export function writeLineToFile(filePath, line) {
         fs.appendFileSync(filePath, line + '\n', 'utf-8')
     } catch (error) {
         console.error('Error appending to the file:', error.message)
-    }
-}
-
-export function ensureDirectoryExistence(filePath) {
-    const dir = path.dirname(filePath)
-    if (!fs.existsSync(dir)) {
-        fs.mkdirSync(dir, { recursive: true })
     }
 }
 
@@ -179,77 +171,9 @@ export const entryPoint = async () => {
             message: "Действие:",
             choices: [
                 {
-                    name: "Scroll (evm.txt)",
-                    value: "scroll",
+                    name: "Odos (evm.txt)",
+                    value: "odos",
                 },
-                {
-                    name: "Carv (private_keys.txt)",
-                    value: "carv",
-                },
-                {
-                    name: "Optimism (evm.txt)",
-                    value: "optimism",
-                },
-                {
-                    name: "Scroll pump (evm.txt)",
-                    value: "scroll-pump",
-                },
-                {
-                    name: "Energy (evm.txt)",
-                    value: "energy",
-                },
-                {
-                    name: "Grass (solana.txt)",
-                    value: "grass",
-                },
-                {
-                    name: "Debridge (evm.txt)",
-                    value: "debridge",
-                },
-                {
-                    name: "Layerzero (evm.txt)",
-                    value: "layerzero",
-                },
-                {
-                    name: "Orderly (evm.txt)",
-                    value: "orderly",
-                },
-                {
-                    name: "AiArena (evm.txt)",
-                    value: "aiarena",
-                },
-                {
-                    name: "Aethir (evm.txt)",
-                    value: "aethir",
-                },
-                {
-                    name: "Zksync (evm.txt)",
-                    value: "zksync",
-                },
-                {
-                    name: "Ionet (solana.txt)",
-                    value: "ionet",
-                },
-                {
-                    name: "Kresko (evm.txt)",
-                    value: "kresko",
-                },
-                {
-                    name: "Taiko (evm.txt)",
-                    value: "taiko",
-                },
-                {
-                    name: "Spectral (evm.txt)",
-                    value: "spectral",
-                },
-                {
-                    name: "Eigenlayer (evm.txt)",
-                    value: "eigenlayer",
-                },
-                {
-                    name: "Avail (private_keys.txt)",
-                    value: "avail",
-                }
             ],
             loop: false,
         },
