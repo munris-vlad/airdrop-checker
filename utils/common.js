@@ -171,6 +171,10 @@ export const entryPoint = async () => {
             message: "Действие:",
             choices: [
                 {
+                    name: "Zora OP (evm.txt)",
+                    value: "zoraop",
+                },
+                {
                     name: "Odos (evm.txt)",
                     value: "odos",
                 },
