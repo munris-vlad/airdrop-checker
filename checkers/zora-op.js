@@ -61,7 +61,7 @@ async function checkAirdrop(wallet, proxy = null) {
         await axios.post(`https://op.zora.co/api/on-allowlist`, {
             userAddress: wallet
         }, config).then(async response => {
-            stats[wallet].airdrop = parseInt(response.data.amount) / 1e18
+            stats[wallet].airdrop = response.data.amount ? parseInt(response.data.amount) / 1e18 : 0
             totalAirdrop += parseInt(stats[wallet].airdrop)
             isFetched = true
         }).catch(e => {
