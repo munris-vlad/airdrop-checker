@@ -3,12 +3,10 @@ import {
     getKeyByValue,
     readWallets
 } from '../utils/common.js'
-import axios from "axios"
 import { Table } from 'console-table-printer'
 import { createObjectCsvWriter } from 'csv-writer'
 import cliProgress from 'cli-progress'
-import { HttpsProxyAgent } from "https-proxy-agent"
-import { SocksProxyAgent } from "socks-proxy-agent"
+import { gotScraping } from 'got-scraping'
 
 let columns = [
     { name: 'n', color: 'green', alignment: "right"},
@@ -35,22 +33,36 @@ let totalAirdrop = 0
 const progressBar = new cliProgress.SingleBar({}, cliProgress.Presets.shades_classic)
 
 async function checkAirdrop(wallet, proxy = null) {
-    let config = {
-        timeout: 5000,
-        "headers": {
-            "User-Agent": generateRandomUserAgent(),
+    const client = gotScraping.extend({
+        headers: {
+            "accept": "*/*",
+            "accept-language": "en-US,en;q=0.9",
+            "priority": "u=1, i",
+            "sec-ch-ua": "\"Not)A;Brand\";v=\"99\", \"Google Chrome\";v=\"127\", \"Chromium\";v=\"127\"",
+            "sec-ch-ua-mobile": "?0",
+            "sec-ch-ua-platform": "\"macOS\"",
+            "sec-fetch-dest": "empty",
+            "sec-fetch-mode": "cors",
+            "sec-fetch-site": "cross-site",
+            "Referer": "https://claim.pudgypenguins.com/",
+            "Referrer-Policy": "strict-origin-when-cross-origin"
         },
-    }
-
-    if (proxy) {
-        if (proxy.includes('http')) {
-            config.httpsAgent = new HttpsProxyAgent(proxy)
+        ...(proxy ? { proxyUrl: proxy } : {}),
+        retry: {
+            limit: 3,
+            methods: ['GET', 'POST'],
+            maxRetryAfter: undefined,
+            backoffLimit: 5000,
+            noise: 100
+        },
+        hooks: {
+            beforeRetry: [
+                (error, retryCount) => {
+                    if (debug) console.log(`retry ${retryCount} - ${error.message}`)
+                }
+            ],
         }
-
-        if (proxy.includes('socks')) {
-            config.httpsAgent = new SocksProxyAgent(proxy)
-        }
-    }
+    })
 
     let isFetched = false
     let retries = 0
@@ -58,8 +70,8 @@ async function checkAirdrop(wallet, proxy = null) {
     stats[wallet].airdrop = 0
 
     while (!isFetched) {
-        await axios.get(`https://api.clusters.xyz/v0.1/airdrops/pengu/eligibility/${wallet}`, config).then(async response => {
-            stats[wallet].airdrop = response.data.total ? parseInt(response.data.total) : 0
+        await client(`https://api.clusters.xyz/v0.1/airdrops/pengu/eligibility/${wallet}`).json().then(result => {
+            stats[wallet].airdrop = result.total ? parseInt(result.total) : 0
             totalAirdrop += parseInt(stats[wallet].airdrop)
             isFetched = true
         }).catch(e => {

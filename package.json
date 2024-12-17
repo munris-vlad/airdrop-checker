@@ -13,7 +13,7 @@
     "cors": "^2.8.5",
     "csv-writer": "^1.6.0",
     "dotenv": "^16.3.1",
-    "got-scraping": "^3.2.0-beta.0",
+    "got-scraping": "^3.2.15",
     "http-proxy-agent": "^7.0.0",
     "https-proxy-agent": "^7.0.2",
     "inquirer": "^9.2.11",
