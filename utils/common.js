@@ -171,6 +171,10 @@ export const entryPoint = async () => {
             message: "Действие:",
             choices: [
                 {
+                    name: "Pengu (evm.txt)",
+                    value: "pengu",
+                },
+                {
                     name: "Zora OP (evm.txt)",
                     value: "zoraop",
                 },

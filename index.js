@@ -1,6 +1,7 @@
 import { entryPoint } from "./utils/common.js"
 import { odosAirdropChecker } from "./checkers/odos.js"
 import { zoraOpAirdropChecker } from "./checkers/zora-op.js"
+import { penguAirdropChecker } from "./checkers/pengu.js"
 
 async function startMenu(menu) {
     let startOver = true
@@ -16,6 +17,9 @@ async function startMenu(menu) {
             break
         case "zoraop":
             zoraOpAirdropChecker()
+            break
+        case "pengu":
+            penguAirdropChecker()
             break
     }
 }
