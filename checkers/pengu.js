@@ -12,12 +12,14 @@ let columns = [
     { name: 'n', color: 'green', alignment: "right"},
     { name: 'wallet', color: 'green', alignment: "right"},
     { name: 'airdrop', color: 'green', alignment: "right"},
+    { name: 'unclaimed', color: 'green', alignment: "right"},
 ]
 
 let headers = [
     { id: 'n', title: '№'},
     { id: 'wallet', title: 'wallet'},
     { id: 'airdrop', title: 'airdrop'},
+    { id: 'unclaimed', title: 'unclaimed'},
 ]
 
 let debug = true
@@ -30,6 +32,7 @@ let iteration = 1
 let stats = []
 let csvData = []
 let totalAirdrop = 0
+let totalUnclaimed = 0
 const progressBar = new cliProgress.SingleBar({}, cliProgress.Presets.shades_classic)
 
 async function checkAirdrop(wallet, proxy = null) {
@@ -72,7 +75,9 @@ async function checkAirdrop(wallet, proxy = null) {
     while (!isFetched) {
         await client(`https://api.clusters.xyz/v0.1/airdrops/pengu/eligibility/${wallet}`).json().then(result => {
             stats[wallet].airdrop = result.total ? parseInt(result.total) : 0
+            stats[wallet].unclaimed = result.totalUnclaimed ? parseInt(result.totalUnclaimed) : 0
             totalAirdrop += parseInt(stats[wallet].airdrop)
+            totalUnclaimed += parseInt(stats[wallet].unclaimed)
             isFetched = true
         }).catch(e => {
             if (debug) console.log('balances', e.toString())
@@ -98,7 +103,8 @@ async function fetchWallet(wallet, index) {
     }
 
     stats[wallet] = {
-        airdrop: 0
+        airdrop: 0,
+        unclaimed: 0
     }
 
     await checkAirdrop(wallet, proxy)
@@ -109,6 +115,7 @@ async function fetchWallet(wallet, index) {
         n: parseInt(index)+1,
         wallet: wallet,
         airdrop: stats[wallet].airdrop,
+        unclaimed: stats[wallet].unclaimed,
     }
 
     p.addRow(row, { color: "cyan" })
@@ -177,7 +184,8 @@ async function addTotalRow() {
 
     let row = {
         wallet: 'Total',
-        airdrop: totalAirdrop
+        airdrop: totalAirdrop,
+        unclaimed: totalUnclaimed
     }
 
     p.addRow(row, { color: "cyan" })
