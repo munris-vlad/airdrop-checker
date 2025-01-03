@@ -171,16 +171,12 @@ export const entryPoint = async () => {
             message: "Действие:",
             choices: [
                 {
-                    name: "Pengu (evm.txt)",
-                    value: "pengu",
+                    name: "Taiko (evm.txt)",
+                    value: "taiko",
                 },
                 {
-                    name: "Zora OP (evm.txt)",
-                    value: "zoraop",
-                },
-                {
-                    name: "Odos (evm.txt)",
-                    value: "odos",
+                    name: "Zerion XP (evm.txt)",
+                    value: "zerionxp",
                 },
             ],
             loop: false,

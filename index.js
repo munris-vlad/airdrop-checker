@@ -1,7 +1,6 @@
+import { taikoAirdropChecker } from "./checkers/taiko.js"
+import { zerionXpAirdropChecker } from "./checkers/zerion-xp.js"
 import { entryPoint } from "./utils/common.js"
-import { odosAirdropChecker } from "./checkers/odos.js"
-import { zoraOpAirdropChecker } from "./checkers/zora-op.js"
-import { penguAirdropChecker } from "./checkers/pengu.js"
 
 async function startMenu(menu) {
     let startOver = true
@@ -12,14 +11,11 @@ async function startMenu(menu) {
     }
 
     switch (mode) {
-        case "odos":
-            odosAirdropChecker()
+        case "taiko":
+            taikoAirdropChecker()
             break
-        case "zoraop":
-            zoraOpAirdropChecker()
-            break
-        case "pengu":
-            penguAirdropChecker()
+        case "zerionxp":
+            zerionXpAirdropChecker()
             break
     }
 }
