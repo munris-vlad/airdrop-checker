@@ -1,3 +1,4 @@
+import { sonicAirdropChecker } from "./checkers/sonic.js"
 import { taikoAirdropChecker } from "./checkers/taiko.js"
 import { zerionXpAirdropChecker } from "./checkers/zerion-xp.js"
 import { entryPoint } from "./utils/common.js"
@@ -11,6 +12,9 @@ async function startMenu(menu) {
     }
 
     switch (mode) {
+        case "sonic":
+            sonicAirdropChecker()
+            break
         case "taiko":
             taikoAirdropChecker()
             break
