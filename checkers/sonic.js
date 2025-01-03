@@ -65,12 +65,14 @@ async function checkAirdrop(wallet, proxy = null) {
 
     while (!isFetched) {
         await axios.get(`https://airdrop.sonic.game/api/allocations?wallet=${wallet}`, config).then(async response => {
-            stats[wallet].vesting = parseFloat(response.data[0].total) > 0 ? parseFloat(response.data[0].total) : 0
-            stats[wallet].bonus = parseFloat(response.data[1].total) > 0 ? parseFloat(response.data[1].total) : 0
-            stats[wallet].instant = parseFloat(response.data[2].total) > 0 ? parseFloat(response.data[2].total) : 0
-            total1 += parseInt(stats[wallet].vesting)
-            total2 += parseInt(stats[wallet].bonus)
-            total3 += parseInt(stats[wallet].instant)
+            if (response.data[0]) {
+                stats[wallet].vesting = parseFloat(response.data[0].total) > 0 ? parseFloat(response.data[0].total) : 0
+                stats[wallet].bonus = parseFloat(response.data[1].total) > 0 ? parseFloat(response.data[1].total) : 0
+                stats[wallet].instant = parseFloat(response.data[2].total) > 0 ? parseFloat(response.data[2].total) : 0
+                total1 += parseInt(stats[wallet].vesting)
+                total2 += parseInt(stats[wallet].bonus)
+                total3 += parseInt(stats[wallet].instant)
+            }
             isFetched = true
         }).catch(e => {
             if (debug) console.log('balances', e.toString())
